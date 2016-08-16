@@ -18,3 +18,15 @@ Route::get('/', function () {
 Route::get('/sayhello/{name}', function($name) {
     return "Hello, $name!";
 });
+
+Route::get('/uppercase/{word}', function($word) {
+	return strtoupper($word);
+});
+
+Route::get('/increment/{number}', function($number) {
+	return $number + 1;
+});
+
+Route::get('/add/{num1}/{num2}', function($num1, $num2) {
+	return $num1 + $num2;
+});
