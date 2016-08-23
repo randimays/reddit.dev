@@ -1,0 +1,101 @@
+/*Page Structure*/
+
+.container {
+	width: 60%;
+}
+
+/*Images*/
+#navbar-brand {
+	width: 125px;
+	padding-top: 0;
+	margin-top: 0;
+}
+
+/*Navbar*/
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:active, .navbar-default .navbar-nav .open .dropdown-menu > li > a, .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:active, .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+	background-color: #333132;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu > li > a:active, .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus, nav.navbar.navbar-default a, nav.navbar.navbar-default a:visited {
+	color: #dfdfdf;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover {
+	color: #a28e09;
+}
+
+nav.navbar.navbar-default a:hover {
+	color: #a28e09;
+}
+
+a.navbar-brand {
+	padding-top: 12px;
+}
+
+ul.nav.navbar-nav.navbar-right a.welcomeLoggedInUser.dropdown-toggle {
+	text-decoration: none;
+}
+
+.dropdown-menu {
+	background-color: #333132;
+	padding: 15px 0;
+	border: 2px solid #a28e09;
+	border-top: none;
+	border-radius: 0;
+}
+
+.dropdown-menu > li > a {
+	background-color: #333132;
+}
+
+.navbar {
+	background-color: #333132;
+	border-bottom: 3px solid #a28e09;
+	border-top-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	border-radius: 0;
+}
+
+span.loggedInUser {
+	font-weight: bold;
+}
+
+input.search {
+	background-color: #565656;
+	border-color: #6d6d6d;
+}
+
+button.search {
+	background-color: #a28e09;
+	border-color: #6d6d6d;
+}
+
+/*Text*/
+
+body {
+	font-family: 'Proza Libre', sans-serif;
+	color: #333132;
+}
+
+a, a:hover {
+	text-decoration: none;
+}
+
+a, a:visited {
+	color: #a28e09;
+}
+
+a:hover, a:active {
+	color: #d9be0a;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Roboto Slab', serif;
+}
+
+p.postStats {
+	font-size: .65em;
+	color: #6d6d6d;
+}
