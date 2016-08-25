@@ -44,7 +44,9 @@ class UsersController extends Controller
         $logged_in_user = Auth::user();
         $user = $this->findUserOr404($id);
         $posts = $user->posts;
-        return view('users.account')->with(['logged_in_user' => $logged_in_user, 'posts' => $posts, 'user' => $user]);
+        $user_posts_score = $user->totalScoreForUserPosts($posts);
+
+        return view('users.account')->with(['logged_in_user' => $logged_in_user, 'posts' => $posts, 'user' => $user, 'user_posts_score' => $user_posts_score]);
     }
 
     /**

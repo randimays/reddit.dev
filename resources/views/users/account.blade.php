@@ -11,27 +11,32 @@
 			<ul>
 				<li>Member Since: {{ $user->created_at->format('F Y') }} </li>
 				<li>Total Posts Created: {{ $user->posts->count() }}</li>
-				<li>Total Votes: </li>
-				<li>Total Votes: </li>
+				<li>Combined Score of Posts: {{ $user_posts_score }}</li>
+				<li>Total Votes: {{ $user->votes->count() }} </li>
 			</ul>
 			@if ($user->id === $logged_in_user->id)
 				<form method="GET" action="{{ action('UsersController@edit', $user->id) }}">
 				{!! csrf_field() !!}
 					<button type="submit" class="btn btn-warning">Edit Account</button>
 				</form>
-
 			@endif
 		</div>
 	</div>
-	<h3 class="text-center">Recent Posts</h3>
-	@foreach($user->posts as $post)
-	<div class="row">
-		<div class="col-sm-12 col-md-12 col-lg-12">
-			<a href="{{ action('PostsController@show', $post->id) }}"><h3>{{ $post->title }}</h3></a>
-			<p class="postStats">{{ $post->created_at }}&nbsp;&nbsp;</p>
-			<p>{{ str_limit($post->content, 200) }}</p>
+
+	<h2 class="text-center">Recent Posts</h2>
+	@if (count($user->posts) == 0)
+		<p class="text-center empty">Nothing to show.</p>
+	@endif
+	@foreach ($user->posts as $post)
+		<div class="row">
+			<div class="col-sm-12 col-md-12 col-lg-12">
+				<a href="{{ action('PostsController@show', $post->id) }}"><h3>{{ $post->title }}</h3></a>
+				<p class="postStats">{{ $post->created_at->format('l, F jS Y @ h:i:s A') }}&nbsp;&nbsp;</p>
+				<p>{{ str_limit($post->content, 200) }}</p>
+			</div>
 		</div>
-	</div>
-	<hr>
+		@if ($post != $posts[(count($posts) - 1)])
+		<hr>
+		@endif
 	@endforeach
 @stop

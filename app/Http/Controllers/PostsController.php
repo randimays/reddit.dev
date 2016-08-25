@@ -71,16 +71,17 @@ class PostsController extends Controller
 	public function show(Request $request, $id)
 	{
 		$post = $this->findPostOr404($id);
+		$vote_score = $post->voteScore();
+		$vote_up = "noVote";
+		$vote_down = "noVote";
 
-		// if ($request->user()) {
-		// 	$user_vote = $post->userVote($request->user());
-		// } else {
-		// 	$user_vote = null;
-		// }
+		if ($vote_score == 1) {
+			$vote_up = "vote";
+		} elseif ($vote_score == 0) {
+			$vote_down = "vote";
+		}
 
-		$user_vote = null;
-
-		return view('posts.show')->with(['post' => $post, 'user_vote' => $user_vote]);
+		return view('posts.show')->with(['post' => $post, 'vote_up' => $vote_up, 'vote_down' => $vote_down]);
 	}
 
 	/**
@@ -157,12 +158,9 @@ class PostsController extends Controller
 			'post_id' => $post_id,
 			'user_id' => Auth::user()->id
 		]);
-
 		$vote->vote = $vote_value;
 		$vote->save();
-
 		$post = $vote->post;
-		$post->vote_score = $post->voteScore();
 		$post->save();
 		return redirect()->action('PostsController@show', ['post_id' => $post_id]);
 	}

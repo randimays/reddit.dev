@@ -13,39 +13,50 @@ use App\Post;
 use App\Vote;
 
 class User extends BaseModel implements AuthenticatableContract,
-                                    AuthorizableContract,
-                                    CanResetPasswordContract
+									AuthorizableContract,
+									CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+	use Authenticatable, Authorizable, CanResetPassword;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'users';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['name', 'email', 'password'];
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['name', 'email', 'password'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['password', 'remember_token'];
+	/**
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
+	protected $hidden = ['password', 'remember_token'];
 
-    public function posts() 
-    {
-        return $this->hasMany(Post::class, 'created_by');
-    }
+	public function posts() 
+	{
+		return $this->hasMany(Post::class, 'created_by');
+	}
 
-    public function votes() 
-    {
-        return $this->hasMany(Vote::class, 'user_id');
-    }
+	public function votes() 
+	{
+		return $this->hasMany(Vote::class, 'user_id');
+	}
+
+	public function totalScoreForUserPosts($posts)
+	{   
+		$user_posts_score = 0;
+		foreach ($posts as $post) {
+			if ($post->voteScore()) {
+				$user_posts_score += $post->voteScore();
+			}
+		}
+		return $user_posts_score;
+	}
 }
