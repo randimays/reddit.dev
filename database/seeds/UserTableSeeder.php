@@ -13,12 +13,18 @@ class UserTableSeeder extends Seeder
 	public function run()
 	{
 		if (App::environment('local')) {
-			factory(App\User::class, 10)->create();
+			factory(App\User::class, 100)->create();
 			$user1 = new App\User();
 			$user1->email = "randi@codeup.com";
 			$user1->name = "Randi";
 			$user1->password = Hash::make('codeup');
 			$user1->save();
+
+			$user2 = new App\User();
+			$user2->email = "test@codeup.com";
+			$user2->name = "Test";
+			$user2->password = Hash::make('test');
+			$user2->save();
 		}
 	}
 }

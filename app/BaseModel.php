@@ -11,7 +11,7 @@ class BaseModel extends Model
 	public function getCreatedAtAttribute($value)
 	{
 		$utc = \Carbon\Carbon::createFromFormat($this->getDateFormat(), $value);
-		return $utc->setTimezone('America/Chicago')->format('l, F jS Y @ h:i:s A');
+		return $utc->setTimezone('America/Chicago');
 	}
 
 	public function getUpdatedAtAttribute($value)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Post;
+use App\Vote;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PostsController extends Controller
 {
+	public $page_title = "All Posts";
 	public function __construct()
 	{
     	$this->middleware('auth', ['except' => ['index', 'show']]);
@@ -22,10 +24,18 @@ class PostsController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		$posts = Post::with('user')->paginate(5);
-		return view('posts.index')->with('posts', $posts);
+
+		if ($request->has('post_search')) {
+			$search = $request->post_search;
+			$page_title = "Search Results";
+			$posts = Post::search($search);
+			return view('posts.index')->with(['posts' => $posts, 'page_title' => $page_title]);
+		} else {
+			$posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(5);
+			return view('posts.index')->with(['posts' => $posts, 'page_title' => $this->page_title]);
+		}
 	}
 
 	/**
@@ -46,7 +56,6 @@ class PostsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$this->validate($request, self::$rules);
 		$post = new Post();
 		$post->created_by = Auth::id();
 		Log::info($request->all());
@@ -59,10 +68,19 @@ class PostsController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($id)
+	public function show(Request $request, $id)
 	{
 		$post = $this->findPostOr404($id);
-		return view('posts.show')->with('post', $post);
+
+		// if ($request->user()) {
+		// 	$user_vote = $post->userVote($request->user());
+		// } else {
+		// 	$user_vote = null;
+		// }
+
+		$user_vote = null;
+
+		return view('posts.show')->with(['post' => $post, 'user_vote' => $user_vote]);
 	}
 
 	/**
@@ -107,7 +125,7 @@ class PostsController extends Controller
 	private function validateAndSave(Post $post, Request $request) 
 	{
 		$request->session()->flash('error_message', 'Post was not saved successfully.');
-		$this->validate($request, self::$rules);
+		$this->validate($request, Post::$rules);
 		$request->session()->forget('error_message');
 		$post->title = $request->title;
 		$post->content = $request->content;
@@ -125,5 +143,27 @@ class PostsController extends Controller
 			abort(404);
 		}
 		return $post;
+	}
+
+	public function newest()
+	{
+		$posts = Post::newestPosts();
+		return view('posts.newest')->with(['posts' => $posts]);
+	}
+
+	public function addVote($vote_value, $post_id)
+	{
+		$vote = Vote::with('post')->firstOrCreate([
+			'post_id' => $post_id,
+			'user_id' => Auth::user()->id
+		]);
+
+		$vote->vote = $vote_value;
+		$vote->save();
+
+		$post = $vote->post;
+		$post->vote_score = $post->voteScore();
+		$post->save();
+		return redirect()->action('PostsController@show', ['post_id' => $post_id]);
 	}
 }

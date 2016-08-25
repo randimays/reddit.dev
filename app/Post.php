@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Post extends BaseModel 
 	{
@@ -15,17 +16,22 @@ class Post extends BaseModel
 
 	public function user() 
 	{
-		return $this->belongsTo(User::class, 'created_by', 'id');
+		return $this->belongsTo(User::class, 'created_by');
+	}
+
+	public function votes()
+	{
+		return $this->hasMany(Vote::class);
 	}
 
 	public function setTitleAttribute($value)
 	{
-		return htmlspecialchars(strip_tags($value));
+		$this->attributes['title'] = htmlspecialchars(strip_tags($value));
 	}
 
 	public function setContentAttribute($value)
 	{
-		return htmlspecialchars(strip_tags($value));
+		$this->attributes['content'] = htmlspecialchars(strip_tags($value));
 	}
 
 	public function getTitleAttribute($value)
@@ -33,13 +39,42 @@ class Post extends BaseModel
 		return ucwords($value);
 	}
 
-	public static function mostVoted($userId, $count)
-	{
-
-	}
-
 	public static function count($userId)
     {
-        return Post::where('created_by', $userId)->count();
+        return Post::where('created_by', '=', $userId)->count();
+    }
+
+    public static function search($search = null)
+    {
+    	if ($search != null) {
+    		return Post::where('title', 'LIKE', '%' . $search . '%')->orWhere('content', 'LIKE', '%' . $search . '%')->paginate(10);
+    	}
+    }
+
+    public static function newestPosts()
+    {
+    	return Post::where('created_at', '=', Carbon::today())->paginate(10);
+    }
+
+    public function upVotes()
+    {
+    	return $this->votes()->where('vote', '=', 1);
+    }
+
+    public function downVotes()
+    {
+    	return $this->votes()->where('vote', '=', 0);
+    }
+
+    public function voteScore()
+    {
+    	$up_votes = $this->upVotes()->count();
+    	$down_votes = $this->downVotes()->count();
+    	return $up_votes - $down_votes;
+    }
+
+    public function userVote(User $user)
+    {
+    	return $this->votes()->where('user_id', '=', $user->id)->first();
     }
 }
