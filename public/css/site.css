@@ -1,5 +1,14 @@
 /*Page Structure*/
 
+html {
+	min-height: 100%;
+	position: relative;
+}
+
+body {
+	padding-bottom: 140px;
+}
+
 .container {
 	width: 75%;
 }
@@ -14,6 +23,16 @@ div.userProfile {
 	padding: 30px 0;
 }
 
+footer {
+	background-color: #a28e09;
+	border-top: 3px solid #333132;
+	padding: 30px 0;
+	position: absolute;
+	bottom: 0;
+	height: 130px;
+	width: 100%;
+}
+
 /*Images*/
 .noVote {
 	opacity: .5;
@@ -21,6 +40,22 @@ div.userProfile {
 
 .vote {
 	opacity: 1;
+}
+
+.postImage {
+	object-fit: cover;
+	width: 100px;
+	height: 100px;
+	margin-top: 24px;
+	vertical-align: middle;
+}
+
+.postImageLarge {
+	object-fit: cover;
+	width: 100%;
+	max-height: 300px;
+	margin-top: -20px;
+	margin-bottom: 20px;
 }
 
 /*Navbar*/
@@ -77,6 +112,7 @@ ul.nav.navbar-nav.navbar-right a.welcomeLoggedInUser.dropdown-toggle {
 
 .navbar-form {
 	display: inline-block;
+	margin-top: 10px;
 }
 
 span.loggedInUser {
@@ -103,6 +139,32 @@ button.search {
 	right: 7px;
 }
 
+/*Buttons*/
+.btn.btn-primary, .btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active {
+	background-color: #0955a2;
+	border-color: #033e7c;
+	text-transform: uppercase;
+	font-size: .85em;
+	padding-top: 8px;
+}
+
+.btn.btn-danger, .btn.btn-danger:hover, .btn.btn-danger:focus, .btn.btn-danger:active {
+	background-color: #a23109;
+	border-color: #711e0b;
+	text-transform: uppercase;
+	font-size: .85em;
+	padding-top: 8px;
+}
+
+.btn.btn-warning, .btn.btn-warning:hover, .btn.btn-warning:focus, .btn.btn-warning:active {
+	background-color: #a28e09;
+	border-color: #837627;
+	text-transform: uppercase;
+	font-size: .85em;
+	padding-top: 8px;
+}
+
+
 /*Text*/
 
 body {
@@ -128,6 +190,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
 	font-size: 1.85em;
+	margin-bottom: 30px;
 }
 
 h2 {
@@ -146,11 +209,30 @@ p.voteCount {
 	margin: 10px 0;
 }
 
-p.postStats {
+p.postStats, p.postScore {
 	font-size: .65em;
 	color: #6d6d6d;
 }
 
+p.postScore {
+	margin-top: 5px;
+	text-align: center;
+}
+
+p#finePrint {
+	color: #333132;
+	font-size: .65em;
+}
+
 .empty {
 	margin-top: 20px;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+	background-color: #a28e09;
+	border: 1px solid #a28e09;
+}
+
+.pagination > li > a, .pagination > li > a:hover {
+	color: #a28e09;
 }

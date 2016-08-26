@@ -21,4 +21,6 @@ Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', 'Auth\AuthController@postRegister');
 Route::get('users/{user}', 'UsersController@show');
 Route::get('users/{user}/edit', 'UsersController@edit');
+Route::put('users/{user}', 'UsersController@update');
+Route::delete('users/{user}', 'UsersController@destroy');
 Route::get('/voted_post/{post}/{vote}', 'PostsController@addVote');

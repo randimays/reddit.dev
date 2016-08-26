@@ -2,7 +2,8 @@
 
 @section('content')
 	<h1 class="text-center">Edit Post</h1>
-	<form method="POST" action="{{ action('PostsController@update', $post->id) }}">
+	
+	<form method="POST" action="{{ action('PostsController@update', $post->id) }}" enctype="multipart/form-data">
 	{{ method_field('PUT') }}
 	{!! csrf_field() !!}
 		<div class="form-group">
@@ -14,11 +15,16 @@
 			<textarea rows="12" class="form-control" name="content">{{ $post->content }}</textarea>
 		</div>
 		<div class="form-group">
+			<label for="Image">Image</label>
+			<input type="file" class="form-control" name="image" accept="image/*">
+		</div>
+		<div class="form-group">
 			<label for="URL">URL</label>
 			<input type="text" class="form-control" name="url" value="{{ $post->url }}">
 		</div>
-		<button type="submit" class="btn btn-primary">Update</button>
+		<button type="submit" class="btn btn-primary pull-right">Update</button>
 	</form>
+
 	<form method="POST" action="{{ action('PostsController@destroy', $post->id) }}">
 		{{ method_field('DELETE') }}
 		{!! csrf_field() !!}

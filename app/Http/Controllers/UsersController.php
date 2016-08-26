@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\User;
 
+
 class UsersController extends Controller
 {
     /**
@@ -70,7 +71,8 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = $this->findUserOr404($id);
+        return $this->validateAndSave($user, $request);
     }
 
     /**
@@ -81,7 +83,21 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = $this->findUserOr404($id);
+        $user->delete();
+        session()->flash('success_message', 'User deleted successfully.');
+        return redirect()->action('Auth\AuthController@getLogin');
+    }
+
+    private function validateAndSave(User $user, Request $request) 
+    {
+        $request->session()->flash('error_message', 'User not saved successfully.');
+        $request->session()->forget('error_message');
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+        session()->flash('success_message', 'User saved successfully.');
+        return redirect()->action('UsersController@show', ['id' => $user->id]);
     }
 
     private function findUserOr404($id) 

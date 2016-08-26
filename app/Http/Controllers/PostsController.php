@@ -10,13 +10,15 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Storage;
 
 class PostsController extends Controller
 {
 	public $page_title = "All Posts";
 	public function __construct()
 	{
-    	$this->middleware('auth', ['except' => ['index', 'show']]);
+    	$this->middleware('auth', ['except' => ['index', 'newest', 'show']]);
 	}
 
 	/**
@@ -26,16 +28,17 @@ class PostsController extends Controller
 	 */
 	public function index(Request $request)
 	{
-
+		$storage_path  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
 		if ($request->has('post_search')) {
 			$search = $request->post_search;
 			$page_title = "Search Results";
 			$posts = Post::search($search);
-			return view('posts.index')->with(['posts' => $posts, 'page_title' => $page_title]);
+			return view('posts.index')->with(['posts' => $posts, 'page_title' => $page_title, 'storage_path' => $storage_path]);
 		} else {
 			$posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(5);
-			return view('posts.index')->with(['posts' => $posts, 'page_title' => $this->page_title]);
+			return view('posts.index')->with(['posts' => $posts, 'page_title' => $this->page_title, 'storage_path' => $storage_path]);
 		}
+
 	}
 
 	/**
@@ -71,17 +74,23 @@ class PostsController extends Controller
 	public function show(Request $request, $id)
 	{
 		$post = $this->findPostOr404($id);
-		$vote_score = $post->voteScore();
 		$vote_up = "noVote";
 		$vote_down = "noVote";
+		if ($post->vote_score) {
+			$user_vote = $post->userVote(Auth::user())->vote;
+			$vote_score = $post->voteScore();
 
-		if ($vote_score == 1) {
-			$vote_up = "vote";
-		} elseif ($vote_score == 0) {
-			$vote_down = "vote";
+			if ($user_vote == 1) {
+				$vote_up = "vote";
+			} elseif ($user_vote == 0) {
+				$vote_down = "vote";
+			}
+		} else {
+			$user_vote = null;
+			$vote_score = null;
 		}
 
-		return view('posts.show')->with(['post' => $post, 'vote_up' => $vote_up, 'vote_down' => $vote_down]);
+		return view('posts.show')->with(['post' => $post, 'vote_up' => $vote_up, 'vote_down' => $vote_down, 'user_vote' => $user_vote, 'vote_score' => $vote_score]);
 	}
 
 	/**
@@ -130,6 +139,7 @@ class PostsController extends Controller
 		$request->session()->forget('error_message');
 		$post->title = $request->title;
 		$post->content = $request->content;
+		$this->storeImage($request, $post);	
 		$post->url = $request->url;
 		$post->save();
 		session()->flash('success_message', 'Post saved successfully.');
@@ -149,7 +159,8 @@ class PostsController extends Controller
 	public function newest()
 	{
 		$posts = Post::newestPosts();
-		return view('posts.newest')->with(['posts' => $posts]);
+		$page_title = "Posts From Today";
+		return view('posts.newest')->with(['posts' => $posts, 'page_title' => $page_title]);
 	}
 
 	public function addVote($vote_value, $post_id)
@@ -164,4 +175,13 @@ class PostsController extends Controller
 		$post->save();
 		return redirect()->action('PostsController@show', ['post_id' => $post_id]);
 	}
+
+	private function storeImage(Request $request, Post $post)
+	{
+		$file = $request->file('image')->getClientOriginalName();
+		$request->file('image')->move(public_path('image'), $request->file('image')->getClientOriginalName());
+		$file_path = public_path('image') . '/' . $request->file('image')->getClientOriginalName();
+		$post->img_path = $file;
+	}
+
 }

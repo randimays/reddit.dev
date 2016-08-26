@@ -4,10 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends BaseModel 
 	{
+    use SoftDeletes;
+
 	protected $table = 'posts';
+	protected $dates = ['deleted_at'];
 	public static $rules = [
 		'title' => 'required|max:100|string',
 		'content' => 'required|string',

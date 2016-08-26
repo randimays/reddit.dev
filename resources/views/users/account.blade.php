@@ -9,10 +9,10 @@
 		<div class="col-sm-6 col-md-6 col-lg-6">
 			<p class="lead">{{ $user->name }}</p>
 			<ul>
-				<li>Member Since: {{ $user->created_at->format('F Y') }} </li>
+				<li>Member Since: {{ $user->created_at->format('F Y') }}</li>
 				<li>Total Posts Created: {{ $user->posts->count() }}</li>
 				<li>Combined Score of Posts: {{ $user_posts_score }}</li>
-				<li>Total Votes: {{ $user->votes->count() }} </li>
+				<li>Total Votes: {{ $user->votes->count() }}</li>
 			</ul>
 			@if ($user->id === $logged_in_user->id)
 				<form method="GET" action="{{ action('UsersController@edit', $user->id) }}">
@@ -24,12 +24,18 @@
 	</div>
 
 	<h2 class="text-center">Recent Posts</h2>
-	@if (count($user->posts) == 0)
-		<p class="text-center empty">Nothing to show.</p>
-	@endif
+	@include('partials.nothing_to_show')
 	@foreach ($user->posts as $post)
 		<div class="row">
-			<div class="col-sm-12 col-md-12 col-lg-12">
+			<div class="col-sm-2 col-md-2 col-lg-2">
+			@if ($post->img_path)
+				<a href="{{ action('PostsController@show', $post->id) }}">
+					<img src="{{ '/image/' . $post->img_path }}" class="postImage center-block">
+				</a>
+			@endif
+			<p class="postScore">Vote Score: {{ $post->voteScore() }}</p>
+			</div>
+			<div class="col-sm-10 col-md-10 col-lg-10">
 				<a href="{{ action('PostsController@show', $post->id) }}"><h3>{{ $post->title }}</h3></a>
 				<p class="postStats">{{ $post->created_at->format('l, F jS Y @ h:i:s A') }}&nbsp;&nbsp;</p>
 				<p>{{ str_limit($post->content, 200) }}</p>

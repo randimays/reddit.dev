@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Post;
 use App\Vote;
 
@@ -16,7 +17,7 @@ class User extends BaseModel implements AuthenticatableContract,
 									AuthorizableContract,
 									CanResetPasswordContract
 {
-	use Authenticatable, Authorizable, CanResetPassword;
+	use Authenticatable, Authorizable, CanResetPassword, SoftDeletes;
 
 	/**
 	 * The database table used by the model.
@@ -38,6 +39,7 @@ class User extends BaseModel implements AuthenticatableContract,
 	 * @var array
 	 */
 	protected $hidden = ['password', 'remember_token'];
+	protected $dates = ['deleted_at'];
 
 	public function posts() 
 	{
