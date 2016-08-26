@@ -21,7 +21,10 @@
 			<a href="{{ action('PostsController@show', $post->id) }}">
 				<h3>{{ $post->title }}</h3>
 			</a>
-			<p class="postStats">{{ $post->created_at->format('l, F jS Y @ h:i:s A') }}&nbsp;&nbsp;//&nbsp;&nbsp;Posted By {{ $post->user->name }}</p>
+			<p class="postStats">{{ $post->created_at->format('l, F jS Y @ h:i:s A') }}&nbsp;&nbsp;//&nbsp;&nbsp;Posted By		<a href="{{ action('UsersController@show', ['user_id' => $post->user->id]) }}">{{ $post->user->name }}</a>
+			@if (Auth::check() && Auth::user()->id === $post->user->id)
+				<a href="{{ action('PostsController@edit', ['id' => $post->id]) }}">&nbsp;&nbsp;->&nbsp;&nbsp;Edit Post</a>
+			@endif</p>
 			<p>{{ str_limit($post->content, 200) }}</p>
 		</div>
 	</div>
