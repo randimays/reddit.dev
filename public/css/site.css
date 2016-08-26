@@ -236,3 +236,8 @@ p#finePrint {
 .pagination > li > a, .pagination > li > a:hover {
 	color: #a28e09;
 }
+
+ul.userDetails {
+	list-style: none;
+	padding-left: 0;
+}

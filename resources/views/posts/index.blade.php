@@ -14,6 +14,8 @@
 				<a href="{{ action('PostsController@show', $post->id) }}">
 					<img src="{{ '/image/' . $post->img_path }}" class="postImage center-block">
 				</a>
+			@else
+				<img src="/img/no_image.png" class="postImage center-block">
 			@endif
 			<p class="postScore">Vote Score: {{ $post->voteScore() }}</p>
 		</div>

@@ -8,7 +8,7 @@
 		</div>
 		<div class="col-sm-6 col-md-6 col-lg-6">
 			<p class="lead">{{ $user->name }}</p>
-			<ul>
+			<ul class="userDetails">
 				<li>Member Since: {{ $user->created_at->format('F Y') }}</li>
 				<li>Total Posts Created: {{ $user->posts->count() }}</li>
 				<li>Combined Score of Posts: {{ $user_posts_score }}</li>
