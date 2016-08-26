@@ -12,8 +12,6 @@ class PostsTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		if (App::environment('local')) {
-			factory(App\Post::class, 100)->create();
-		}
+		factory(App\Post::class, 100)->create();
 	}
 }
