@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-	<h1 class="text-center">Edit Post</h1>
+	<h1 class="text-center page_head">Edit Post</h1>
 	
 	<form method="POST" action="{{ action('PostsController@update', $post->id) }}" enctype="multipart/form-data">
 	{{ method_field('PUT') }}

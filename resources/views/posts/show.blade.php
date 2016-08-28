@@ -13,7 +13,7 @@
 	</p>
 	<hr>
 	<div class="row">
-		<div class="col-sm-1 col-md-1 col-lg-1">
+		<div class="col-xs-3 col-sm-1 col-md-1 col-lg-1">
 			<a href="{{ action('PostsController@addVote', ['post_id' => $post->id, 'vote_value' => 1]) }}">
 				<img src="/img/vote_arrow_up.png" class="img-responsive {{ $vote_up }}">
 			</a>
@@ -22,7 +22,7 @@
 				<img src="/img/vote_arrow_down.png" class="img-responsive {{ $vote_down }}">
 			</a>
 		</div>
-		<div class="col-sm-11 col-md-11 col-lg-11">
+		<div class="col-xs-9 col-sm-11 col-md-11 col-lg-11">
 			<p>{{ $post->content }}</p>
 		</div>
 	</div>

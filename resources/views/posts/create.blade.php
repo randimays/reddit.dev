@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-	<h1 class="text-center">Create Post</h1>
+	<h1 class="text-center page_head">Create Post</h1>
 	<form method="POST" action="{{ action('PostsController@store') }}" enctype="multipart/form-data">
 	{!! csrf_field() !!}
 		@include('partials.form', ['field' => 'title', 'label' => 'Title', 'type' => 'text'])

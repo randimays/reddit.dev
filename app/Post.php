@@ -20,7 +20,7 @@ class Post extends BaseModel
 
 	public function user() 
 	{
-		return $this->belongsTo(User::class, 'created_by');
+		return $this->belongsTo(User::class, 'created_by', 'id');
 	}
 
 	public function votes()
@@ -79,6 +79,6 @@ class Post extends BaseModel
 
     public function userVote(User $user)
     {
-    	return $this->votes()->where('user_id', '=', $user->id)->first();
+    	return $this->hasMany(Vote::class)->where('user_id', '=', $user->id)->first();
     }
 }

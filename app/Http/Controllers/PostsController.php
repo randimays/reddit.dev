@@ -33,7 +33,8 @@ class PostsController extends Controller
 			$search = $request->post_search;
 			$page_title = "Search Results";
 			$posts = Post::search($search);
-			return view('posts.index')->with(['posts' => $posts, 'page_title' => $page_title, 'storage_path' => $storage_path]);
+			$data = compact('posts', 'page_title', 'storage_path');
+			return view('posts.index')->with($data);
 		} else {
 			$posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(5);
 			return view('posts.index')->with(['posts' => $posts, 'page_title' => $this->page_title, 'storage_path' => $storage_path]);
@@ -73,13 +74,13 @@ class PostsController extends Controller
 	 */
 	public function show(Request $request, $id)
 	{
-		$post = $this->findPostOr404($id);
+		$post = Post::with('user')->findOrFail($id);
 		$vote_up = "noVote";
 		$vote_down = "noVote";
 		if ($post->vote_score != null) {
-			$user_vote = $post->userVote(Auth::user())->vote;
+			$vote = $post->userVote(Auth::user());
+			$user_vote = $vote->vote;
 			$vote_score = $post->voteScore();
-
 			if ($user_vote == 1) {
 				$vote_up = "vote";
 			} elseif ($user_vote == 0) {
@@ -90,7 +91,9 @@ class PostsController extends Controller
 			$vote_score = 0;
 		}
 
-		return view('posts.show')->with(['post' => $post, 'vote_up' => $vote_up, 'vote_down' => $vote_down, 'user_vote' => $user_vote, 'vote_score' => $vote_score]);
+		$data = compact('post', 'vote_up', 'vote_down', 'user_vote', 'vote_score');
+
+		return view('posts.show')->with($data);
 	}
 
 	/**
@@ -101,7 +104,7 @@ class PostsController extends Controller
 	 */
 	public function edit($id)
 	{
-		$post = $this->findPostOr404($id);
+		$post = Post::findOrFail($id);
 		return view('posts.edit')->with('post', $post);
 	}
 
@@ -114,7 +117,7 @@ class PostsController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$post = $this->findPostOr404($id);
+		$post = Post::findOrFail($id);
 		return $this->validateAndSave($post, $request);
 	}
 
@@ -126,7 +129,7 @@ class PostsController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$post = $this->findPostOr404($id);
+		$post = Post::findOrFail($id);
 		$post->delete();
 		session()->flash('success_message', 'Post deleted successfully.');
 		return redirect()->action('PostsController@index');
@@ -146,21 +149,12 @@ class PostsController extends Controller
 		return redirect()->action('PostsController@index');
 	}
 
-	private function findPostOr404($id) 
-	{
-		$post = Post::find($id);
-		if (!$post) {
-			Log::info("Post with ID $id cannot be found.");
-			abort(404);
-		}
-		return $post;
-	}
-
 	public function newest()
 	{
 		$posts = Post::newestPosts();
 		$page_title = "Posts From Today";
-		return view('posts.newest')->with(['posts' => $posts, 'page_title' => $page_title]);
+		$data = compact('posts', 'page_title');
+		return view('posts.newest')->with($data);
 	}
 
 	public function addVote($post_id, $vote_value)

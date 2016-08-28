@@ -5,7 +5,7 @@
 		<div class="alert alert-success">{{ session('success_message') }}</div>
 	@endif
 
-	<h1 class="text-center">{{ $page_title }}</h1>
+	<h1 class="text-center page_head">{{ $page_title }}</h1>
 	@include('partials.nothing_to_show')
 
 	@foreach($posts as $post)
